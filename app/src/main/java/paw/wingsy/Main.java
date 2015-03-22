@@ -7,27 +7,48 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 
 
 public class Main extends Activity implements View.OnTouchListener {
-    private Surface s;
+    private View sv;
+    public Surface s;
     protected static boolean isItOk = false;
     Thread t;
+    Button gas, left, right;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        s = new Surface(this);
-        s.spriteBmp = BitmapFactory.decodeResource(getResources(),R.drawable.jabko_czerwone);
-        setContentView(s);
+
+
+        s = (Surface) findViewById(R.id.sSurface);
+        gas = (Button)findViewById(R.id.bGas);
+        gas.setOnTouchListener(this);
+        left = (Button)findViewById(R.id.bLeft);
+        right = (Button)findViewById(R.id.bRight);
+
+
+        //load bitmaps
+        s.sprite1Bmp = BitmapFactory.decodeResource(getResources(),R.drawable.jabko_czerwone);
+        s.arrowRightBmp = BitmapFactory.decodeResource(getResources(),R.drawable.arrowright);
+        s.arrowLeftBmp = BitmapFactory.decodeResource(getResources(),R.drawable.arrowleft);
+        s.gasBmp = BitmapFactory.decodeResource(getResources(),R.drawable.gas);
+
+
+
     }
 
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch (View v, MotionEvent e) {
+
+                s.gas.x++;
+
         return false;
     }
 
@@ -45,20 +66,23 @@ public class Main extends Activity implements View.OnTouchListener {
 
     public void pause(){
         isItOk = false;
-        while(true){
+       /* while(true){
             try{
-                t.join();
+              t.join();
             }catch(InterruptedException e){
                 e.printStackTrace();
             }
             break;
         }
-        t = null;
+        t = null;*/
     }
 
     public void resume(){
         isItOk = true;
         t = new Thread(s);
         t.start();
+
+
+
     }
 }

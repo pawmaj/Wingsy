@@ -8,7 +8,7 @@ import android.graphics.Rect;
  * Created by paweł on 2015-03-21.
  */
 public class Sprite {
-    protected int x,y,xSpeed,ySpeed,width,height;
+    protected int x,y,xSpeed,ySpeed,width,height =0;
     protected Bitmap b;
     private Surface surface;
     private int xFrameSize;
@@ -28,11 +28,10 @@ public class Sprite {
         //update();
         int srcX = 0;
         int srcY=0;
-        x=0;
-        y=0;
+
 
         Rect src = new Rect(srcX,srcY,srcX+width,srcY+height);
-        Rect dst = new Rect(x,y, x+width *3,y+height *3);
+        Rect dst = new Rect(x,y, x+width,y+height);
         canvas.drawBitmap(b,src,dst,null);
 
     }
