@@ -3,10 +3,14 @@ package paw.wingsy;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Created by paweł on 2015-03-21.
@@ -16,7 +20,7 @@ public class Surface extends SurfaceView implements Runnable, SurfaceHolder.Call
     private Thread t;
     SurfaceHolder holder;
     protected Bitmap sprite1Bmp;
-    protected Sprite sprite1;
+    protected Sprite jabko;
     protected Sprite arrowLeft;
     protected Sprite arrowRight;
     protected Sprite gas;
@@ -24,6 +28,7 @@ public class Surface extends SurfaceView implements Runnable, SurfaceHolder.Call
     protected Bitmap arrowLeftBmp;
     protected Bitmap arrowRightBmp;
     protected Bitmap gasBmp;
+    private LinkedList<Sprite> toDraw;
     //boolean spriteLoaded = false;
 
     public Surface(Context context) {
@@ -35,19 +40,23 @@ public class Surface extends SurfaceView implements Runnable, SurfaceHolder.Call
 
     @Override
     public void run() {
-        sprite1 = new Sprite(Surface.this, sprite1Bmp);
+        holder = getHolder(); // Must be here for some reason
+
+        //load bitmaps
+        jabko = new Sprite(Surface.this, sprite1Bmp);
         arrowLeft = new Sprite(Surface.this, arrowLeftBmp);
         arrowRight = new Sprite(Surface.this, arrowRightBmp);
         gas = new Sprite(Surface.this, gasBmp);
-        gas.x = 100;
-        holder = getHolder();
-        arrowRight.y = 300;
-        //perfom canvas drawing
-        while(Main.isItOk) {
-            if(!holder.getSurface().isValid()){
-                continue;
-            }
+        toDraw.add(jabko);
+        toDraw.add(arrowLeft);
+        toDraw.add(arrowRight);
+        toDraw.add(gas);
 
+        //Main loop
+        while(Main.isItOk) {
+            if(!holder.getSurface().isValid())continue;//wait for the surface
+
+               updateGameState();
 
             Canvas c = holder.lockCanvas();
                 Draw(c);
@@ -56,13 +65,47 @@ public class Surface extends SurfaceView implements Runnable, SurfaceHolder.Call
 
     } //Drawing method
 
+    private void updateGameState() {
+        checkCollisions(toDraw);
+        gas.x = 100;
+        arrowRight.y = 300;
+    }
+
+    private Dictionary<Sprite,Sprite> checkCollisions(LinkedList<Sprite> sprites) {
+
+        Iterator<Sprite> it1 = toDraw.iterator();
+        while(it1.hasNext()){
+            Iterator<Sprite> it2 = toDraw.iterator();
+            while(it2.hasNext()){
+                Sprite s1 = it1.next();
+                Sprite s2 = it2.next();
+                if(!s1.equals(s2)){
+                    //TODO add sprite collision logic
+                    if(s1.getX() + s1.getWidth() > s2.getX() && s1.getX() < s2.getX()) {
+
+                    }
+// Second case
+                    if(s1.getX() < s2.getX() + s2.getWidth() && s1.getX() + s1.getWidth() > s2.getX()) {
+
+                    }
+// Third s
+                    if((s1.getX() + s1.getWidth() > s2.getX() && s1.getX() < s2.getX()) && (s1.getX() < s2.getX() + s2.getWidth() && s1.getX() + s1.getWidth() > s2.getX())) {
+
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     protected void Draw(Canvas canvas) {
         canvas.drawARGB(255, 0, 255, 0);
-        //canvas.drawBitmap(jabko,0,0,new Paint());
-        sprite1.onDraw(canvas);
-        arrowLeft.onDraw(canvas);
-        arrowRight.onDraw(canvas);
-        gas.onDraw(canvas);
+
+        Iterator<Sprite> it = toDraw.iterator();//draw Sprite by Sprite
+        while(it.hasNext()){
+            it.next().onDraw(canvas);
+        }
+
     }
 
 

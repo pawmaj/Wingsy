@@ -53,5 +53,19 @@ public class Sprite {
 
     }
 
+    //getters
+    protected int getX(){
+        return x;
+    }
+    protected int getY(){
+        return y;
+    }
+    protected int getWidth(){
+        return width;
+    }
+    protected int getHeight(){
+        return height;
+    }
+
 
 }
