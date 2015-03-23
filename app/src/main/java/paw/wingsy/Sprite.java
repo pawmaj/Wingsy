@@ -2,6 +2,8 @@ package paw.wingsy;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 /**
@@ -15,6 +17,10 @@ public class Sprite {
     private int yFrameSize;
     private int xStep;
     private int yStep;
+    int rotationDeg;
+    int lastRotationDeg;
+    Matrix matrix = new Matrix();
+    Bitmap rotatedBitmap;
 
     public Sprite(Surface surface1, Bitmap b1 ) {
         b=b1;
@@ -23,16 +29,27 @@ public class Sprite {
         yStep=1;
         width = b.getWidth()/xStep;
         height = b.getHeight()/yStep;
+
+        rotatedBitmap=Bitmap.createBitmap(b, 0, 0, width, height, matrix, true);
+
+
     }
     public void onDraw(Canvas canvas){
+
+
+
+
         //update();
         int srcX = 0;
         int srcY=0;
 
+        double radians = Math.toRadians(rotationDeg);
+       // matrix.setRotate(rotationDeg);
+        rotatedBitmap=Bitmap.createBitmap(b, 0, 0, width, height, matrix, true);
+        matrix.setTranslate(x,y);
 
-        Rect src = new Rect(srcX,srcY,srcX+width,srcY+height);
-        Rect dst = new Rect(x,y, x+width,y+height);
-        canvas.drawBitmap(b,src,dst,null);
+        canvas.drawBitmap(rotatedBitmap,matrix,new Paint());
+
 
     }
 

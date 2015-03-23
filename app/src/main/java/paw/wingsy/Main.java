@@ -47,7 +47,7 @@ public class Main extends Activity implements View.OnTouchListener {
     @Override
     public boolean onTouch (View v, MotionEvent e) {
 
-                s.gas.x++;
+                s.gas.rotationDeg++;
 
         return false;
     }
